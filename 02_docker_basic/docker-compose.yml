@@ -1,0 +1,30 @@
+version: "3.9"  # Docker-compose 버전 (버전별로 명령어가 다름)
+services:  # 실행할 컨테이너 (app, mysql)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_app
+    ports:
+      - "6080:8000"
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_NAME=capybara
+    restart: always
+  
+  mysql:
+    image: mysql:8.0       # 컨테이너화 할 이미지  
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./mysqldata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=capybara
+    ports:
+      - "63306:3306"
